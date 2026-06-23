@@ -1,35 +1,84 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 import config from "../../config";
 import httpStatus from "http-status";
 import { userService } from "./user.service";
+import { catchAsync } from "../../utils/catchAsync";
 
-const registerUser = async (req: Request, res: Response) => {
-  try {
+// const registerUser = async (req: Request, res: Response) => {
+//   try {
+//     const payload = req.body;
+
+//     const user = await userService.registerUserIntoDB(payload);
+
+//     res.status(httpStatus.CREATED).json({
+//       success: true,
+//       statusCode: httpStatus.CREATED,
+//       message: "User Registered successfully",
+//       data: {
+//         user,
+//       },
+//     });
+//   } catch (error) {
+//     console.log(error);
+
+//     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+//       success: false,
+//       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+//       message: "Faild to register user",
+//       error: (error as Error).message,
+//     });
+//   }
+// };
+
+type TMeta = {
+  page: number;
+  limit: number;
+  total: number;
+};
+
+type TResponseData<T> = {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+  meta?: TMeta;
+};
+
+const sendResponse = <T>(res: Response, data: TResponseData<T>) => {
+  res.status(data.statusCode).json({
+    success: data.success,
+    statusCode: data.statusCode,
+    message: data.message,
+    data: data.data,
+    meta: data.data,
+  });
+};
+
+const registerUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
 
     const user = await userService.registerUserIntoDB(payload);
 
-    res.status(httpStatus.CREATED).json({
+    // res.status(httpStatus.CREATED).json({
+    //   success: true,
+    //   statusCode: httpStatus.CREATED,
+    //   message: "User Registered successfully",
+    //   data: {
+    //     user,
+    //   },
+    // });
+
+    sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
       message: "User Registered successfully",
-      data: {
-        user,
-      },
+      data: { user },
     });
-  } catch (error) {
-    console.log(error);
-
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        message: "Faild to register user",
-        error: (error as Error).message
-    })
-  }
-};
+  },
+);
 
 export const userController = {
   registerUser,
