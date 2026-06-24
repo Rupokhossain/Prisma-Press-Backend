@@ -5,6 +5,10 @@ import config from "../../config";
 import httpStatus from "http-status";
 import { userService } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import jwt from "jsonwebtoken"
+import { jwtUtils } from "../../utils/jwt";
+
 
 // const registerUser = async (req: Request, res: Response) => {
 //   try {
@@ -32,29 +36,7 @@ import { catchAsync } from "../../utils/catchAsync";
 //   }
 // };
 
-type TMeta = {
-  page: number;
-  limit: number;
-  total: number;
-};
 
-type TResponseData<T> = {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: T;
-  meta?: TMeta;
-};
-
-const sendResponse = <T>(res: Response, data: TResponseData<T>) => {
-  res.status(data.statusCode).json({
-    success: data.success,
-    statusCode: data.statusCode,
-    message: data.message,
-    data: data.data,
-    meta: data.data,
-  });
-};
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -80,6 +62,32 @@ const registerUser = catchAsync(
   },
 );
 
+const getMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    // const {accessToken} = req.cookies;
+    // console.log(req.user, "User Request");
+
+    // const verifiedToken = jwtUtils.verifiedToken(accessToken, config.jwt_access_secret)
+    // console.log(verifiedToken)
+
+    // if(typeof verifiedToken === "string") {
+    //   throw new Error(verifiedToken)
+    // }
+
+    const profile = await userService.getMyProfileFromDB(req.user?.id as string)
+
+    
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User profile fetched successfully",
+      data: {profile}
+    })
+
+})
+
+
 export const userController = {
   registerUser,
+  getMyProfile
 };

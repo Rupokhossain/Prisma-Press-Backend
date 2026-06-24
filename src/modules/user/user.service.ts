@@ -1,13 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 import config from "../../config";
-
-interface RegisterUserPayload {
-    name: string;
-    email: string;
-    password: string;
-    profilePhoto?: string;
-}
+import { RegisterUserPayload } from "../user.interface";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, profilePhoto } = payload;
@@ -54,10 +48,22 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   });
 
   return user;
-
 };
 
+const getMyProfileFromDB = async (userId: string) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+    omit: {
+      password: true,
+    },
+    include: {
+      profile: true,
+    },
+  });
+  return user;
+};
 
 export const userService = {
-    registerUserIntoDB
-}
+  registerUserIntoDB,
+  getMyProfileFromDB,
+};

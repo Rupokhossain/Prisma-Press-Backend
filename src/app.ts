@@ -9,7 +9,12 @@ import { authRoutes } from "./modules/auth/auth.route";
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:8000",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,12 +26,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-
-
 app.use("/api/users", userRoutes);
 
-app.use("/api/login", authRoutes)
-
-
+app.use("/api/auth", authRoutes);
 
 export default app;
