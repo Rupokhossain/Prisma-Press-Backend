@@ -10,7 +10,7 @@ model Comment {
 
     status CommentStatus @default(APPROVED)
 
-    createAt  DateTime @default(now())
+    createdAt  DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@index([postId])
