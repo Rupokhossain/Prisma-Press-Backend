@@ -78,37 +78,55 @@ const getAllPosts = async () => {
 
     // combining search (OR Operator) and filter (AND)
 
-    where: {
-      // filtering & searching combined
-      AND: [
-        {
-          // searching
-          OR: [
-            {
-              title: {
-                contains: "Ronaldo",
-                mode: "insensitive",
-              },
-            },
+    // where: {
+    //   // filtering & searching combined
+    //   AND: [
+    //     {
+    //       // searching
+    //       OR: [
+    //         {
+    //           title: {
+    //             contains: "Ronaldo",
+    //             mode: "insensitive",
+    //           },
+    //         },
 
-            {
-              content: {
-                contains: "CR7",
-                mode: "insensitive",
-              },
-            },
-          ],
-        },
+    //         {
+    //           content: {
+    //             contains: "CR7",
+    //             mode: "insensitive",
+    //           },
+    //         },
+    //       ],
+    //     },
 
-        // filtering
-        {
-          title: "Lionel Messi",
-        },
+    //     // filtering
+    //     {
+    //       title: "Lionel Messi",
+    //     },
 
-        {
-          content: "Lionel Messi",
-        },
-      ],
+    //     {
+    //       content: "Lionel Messi",
+    //     },
+    //   ],
+    // },
+
+    take: 1,
+    // take : 2,
+    // for first page skip is 0
+    // skip: 1, // visiting page 2
+    // skip: 2, // visiting page 3
+    skip: 3, // visiting page 4
+    // page = 4, limit / take = 1 => skip : (page - 1) * limit =>
+
+    // page = 3, limit / take = 10 => skip : (page - 1) * limit = (3-1) * 10 = 20
+
+    // sorting in ascending or descending order on specific fields
+
+    orderBy: {
+      createdAt: "desc",
+      title: "asc",
+      content: "desc",
     },
 
     include: {
