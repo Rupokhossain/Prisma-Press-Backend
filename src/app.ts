@@ -12,6 +12,7 @@ import path from "node:path";
 import { notFound } from "./middlewares/notFound";
 import httpStatus from "http-status";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { subscriptionRoutes } from "./modules/subscription/subscription.route";
 
 const app: Application = express();
 
@@ -33,11 +34,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/users", userRoutes);
-
 app.use("/api/auth", authRoutes);
-
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/subscription", subscriptionRoutes)
 
 // app.use((req: Request, res: Response) => {
 //   res.status(404).json({
