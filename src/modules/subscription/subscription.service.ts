@@ -1,4 +1,3 @@
-
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
@@ -47,13 +46,15 @@ const createCheckOutSession = async (userId: string) => {
       metadata: { userId: user.id },
     });
 
-    console.log(session)
+    console.log(session);
 
     return session.url;
   });
 
   return {
-    paymentUrl: transactionResult,
+    paymentUrl: {
+      transactionResult,
+    },
   };
 };
 
