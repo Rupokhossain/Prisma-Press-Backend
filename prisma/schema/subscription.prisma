@@ -11,6 +11,9 @@ model Subscription {
 
     // stripe customer id
     stripeCustomerId String @unique
+
+    stripeSubscriptionId String @unique
+
     // stripe subscription id
 
     createdAt DateTime @default(now())
