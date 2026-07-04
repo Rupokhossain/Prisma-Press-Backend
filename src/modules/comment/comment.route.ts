@@ -9,7 +9,7 @@ router.post("/", auth(Role.USER, Role.ADMIN, Role.AUTHOR), commentController.cre
 
 router.get("/author/:authorId", commentController.getCommentByAuthorId);
 
-router.get("/:commentId", auth(Role.ADMIN), commentController.getCommentByPostId);
+router.get("/:postId", auth(Role.ADMIN), commentController.getCommentByPostId);
 
 router.patch("/:commentId", auth(Role.USER, Role.ADMIN, Role.AUTHOR), commentController.updateComment);
 
