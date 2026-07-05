@@ -71,6 +71,7 @@ const getPremiumContent = async (query: IPostQuery) => {
         status: query.status,
       });
     }
+    
     andConditions.push({
       isPremium: true
     })
@@ -81,7 +82,7 @@ const getPremiumContent = async (query: IPostQuery) => {
     },
 
         take: limit,
-    skip: skip,
+        skip: skip,
 
     orderBy: {
       [sortBy]: sortOrder,

@@ -3,7 +3,7 @@ import { stripe } from "../../lib/stripe";
 import { prisma } from "../../lib/prisma";
 import { SubscriptionStatus } from "../../../generated/prisma/enums";
 
- const getPeriodEnd = (payload: Stripe.Subscription) => {
+const getPeriodEnd = (payload: Stripe.Subscription) => {
   const currentPeriodEndInMilliseconds =
     payload.items.data[0]?.current_period_end!;
 
@@ -12,7 +12,9 @@ import { SubscriptionStatus } from "../../../generated/prisma/enums";
   return currentPeriodEnd;
 };
 
-export const handleCheckoutCompleted = async (session: Stripe.Checkout.Session) => {
+export const handleCheckoutCompleted = async (
+  session: Stripe.Checkout.Session,
+) => {
   const userId = session.metadata?.userId;
   const stripeCustomerId = session.customer as string;
   const stripeSubscriptionId = session.subscription as string;
@@ -49,8 +51,10 @@ export const handleCheckoutCompleted = async (session: Stripe.Checkout.Session) 
   });
 };
 
-export const handleChangeSubscription = async (payload: Stripe.Subscription) => {
-  const stripeCustomerId = payload.id;
+export const handleChangeSubscription = async (
+  payload: Stripe.Subscription,
+) => {
+  const stripeSubscriptionId = payload.id;
 
   const status =
     payload.status === "active" || payload.status === "trialing"
@@ -63,13 +67,13 @@ export const handleChangeSubscription = async (payload: Stripe.Subscription) => 
 
   const isSubcriptionExist = await prisma.subscription.findUnique({
     where: {
-      stripeCustomerId,
+      stripeSubscriptionId,
     },
   });
 
   if (!isSubcriptionExist) {
     console.log(
-      `Webhook: No Subscription found for subscription id : ${stripeCustomerId}`,
+      `Webhook: No Subscription found for subscription id : ${stripeSubscriptionId}`,
     );
 
     return;
@@ -77,7 +81,7 @@ export const handleChangeSubscription = async (payload: Stripe.Subscription) => 
 
   await prisma.subscription.update({
     where: {
-      stripeCustomerId,
+      stripeSubscriptionId,
     },
     data: {
       status,
@@ -85,4 +89,3 @@ export const handleChangeSubscription = async (payload: Stripe.Subscription) => 
     },
   });
 };
-
