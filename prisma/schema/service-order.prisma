@@ -26,6 +26,26 @@ model Order {
     user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
+    payment Payment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Payment {
+    id      String        @id @default(uuid())
+    orderId String
+    tranId  String
+    amount  Decimal
+    status  PaymentStatus @default(PENDING)
+
+
+    // payment details
+    meta Json
+
+    // references
+    order   Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

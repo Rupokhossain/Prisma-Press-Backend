@@ -113,9 +113,7 @@ const getAllPosts = async (query: IPostQuery) => {
     });
   }
 
-  andConditions.push({
-    isPremium: false,
-  });
+  isPremium: false;
 
   // if (query.searchTerm) {
   //   andConditions.push({
@@ -382,9 +380,9 @@ const getAllPosts = async (query: IPostQuery) => {
 
   const totalPostCount = await prisma.post.count({
     where: {
-      AND: andConditions
-    }
-  })
+      AND: andConditions,
+    },
+  });
 
   return {
     data: posts,
@@ -392,8 +390,8 @@ const getAllPosts = async (query: IPostQuery) => {
       page: page,
       limit: limit,
       total: totalPostCount,
-      totalPages: Math.ceil(totalPostCount / limit)
-    }
+      totalPages: Math.ceil(totalPostCount / limit),
+    },
   };
 };
 
