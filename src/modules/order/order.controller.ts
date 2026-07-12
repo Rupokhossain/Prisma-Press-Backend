@@ -5,7 +5,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
+  const user = req.user!;
 
   const payload = req.body;
 
@@ -13,7 +13,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     throw new Error("Please provide Service Id And Quantity");
   }
 
-  const response = await orderService.createOrder(userId as string, payload);
+  const response = await orderService.createOrder(payload, user);
 
   sendResponse(res, {
     success: true,
